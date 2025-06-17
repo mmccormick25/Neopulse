@@ -4,13 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Neopulse</title>
-    <!-- Getting font -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap"
-      rel="stylesheet"
-    />
     <style>
       /* Reset CSS: Please avoid making changes here unless you know what you're doing :) */
       *,
@@ -49,12 +42,18 @@
         text-decoration: none;
         color: inherit;
       }
+
+      @font-face {
+        font-family: "Pixelify Sans";
+        src: url("assets/fonts/PixelifySans-Regular.ttf") format("truetype");
+        font-weight: normal;
+        font-style: normal;
+      }
     </style>
   </head>
   <body>
     <div id="game-container"></div>
     <script src="./phaser.js"></script>
     <script type="module" src="./src/main.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/webfont/1.6.26/webfont.js"></script>
   </body>
 </html>

@@ -9,7 +9,7 @@ export class TitleScreen extends Phaser.Scene {
     this.load.image("circleplayer", "circleplayer.png");
   }
 
-  create() {
+  async create() {
     //this.add
     // .text(400, 100, "Select Your Character", {
     //   fontFamily: "Jersey 10",
@@ -28,11 +28,16 @@ export class TitleScreen extends Phaser.Scene {
     this.pulseSpeed = 0.0004; // How fast it pulses;
     this.pulseTimer = 0; // Time accumulator
 
-    this.add.text(this.scale.width / 2, 300, "Select Your Character", {
-      fontFamily: "Pixelify Sans",
-      fontSize: "100px",
-      color: "#ffffff",
-    });
+    // Wait for the font to load before adding text
+    await document.fonts.load('100px "Pixelify Sans"');
+
+    this.add
+      .text(this.scale.width / 2, 300, "Pick starting form", {
+        fontFamily: "Pixelify Sans",
+        fontSize: "48px",
+        color: "#ffffff",
+      })
+      .setOrigin(0.5);
 
     // Square player option
     const squareBtn = this.add
