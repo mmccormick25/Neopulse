@@ -22,6 +22,8 @@ const config = {
     autoCenter: Phaser.Scale.CENTER_BOTH,
   },
   scene: [Boot, Preloader, TitleScreen, Game, GameOver],
+  pixelArt: true,
+  render: { antialias: false },
 };
 
 new Phaser.Game(config);

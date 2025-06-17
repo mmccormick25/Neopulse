@@ -1,13 +1,29 @@
 export class Player extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, speed) {
-    super(scene, x, y, texture);
+  constructor(scene, x, y, character, speed) {
+    super(scene, x, y, character);
 
     scene.add.existing(this);
 
     this.setScale(0.75);
     this.speed = speed;
 
-    this.turret = scene.add.sprite(x, y, "squareturret");
+    // Choosing turret based on character type
+    switch (character) {
+      case "squareplayer":
+        this.turret = scene.add.sprite(x, y, "squareturret");
+        break;
+      case "circleplayer":
+        this.turret = scene.add.sprite(x, y, "circleturret");
+        break;
+      case "triangleplayer":
+        this.turret = scene.add.sprite(x, y, "triangleturret");
+        break;
+      default:
+        console.error("Unknown character type:", character);
+        this.turret = scene.add.sprite(x, y, "squareturret");
+        break;
+    }
+
     this.turret.setOrigin(0.5);
     this.turret.setScale(0.66);
     this.turretAngle = 0;

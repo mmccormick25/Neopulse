@@ -22,18 +22,27 @@ export class Preloader extends Phaser.Scene {
 
   preload() {
     // Loading assets
-    this.load.setPath("assets");
+    this.load.setPath("assets/images");
 
     // Title screen assets
     this.load.image("title", "title.png");
 
     this.load.image("background", "assets/background.png");
 
-    // Player assets
     this.load.image("grid", "grid.png");
+
+    // Square player assets
     this.load.image("squareplayer", "squareplayer.png");
     this.load.image("squareturret", "squareturret.png");
     this.load.image("squarecursor", "squarecursor.png");
+
+    this.load.image("circleplayer", "circleplayer.png");
+    this.load.image("circleturret", "circleturret.png");
+    this.load.image("circlecursor", "circlecursor.png");
+
+    this.load.image("triangleplayer", "triangleplayer.png");
+    this.load.image("triangleturret", "triangleturret.png");
+    this.load.image("trianglecursor", "trianglecursor.png");
   }
 
   create() {

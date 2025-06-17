@@ -10,14 +10,6 @@ export class TitleScreen extends Phaser.Scene {
   }
 
   async create() {
-    //this.add
-    // .text(400, 100, "Select Your Character", {
-    //   fontFamily: "Jersey 10",
-    //   fontSize: "32px",
-    //   color: "#ffffff",
-    // })
-    // .setOrigin(0.5);
-
     this.cameras.main.setBackgroundColor("#000000");
 
     // Title image
@@ -39,26 +31,31 @@ export class TitleScreen extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    // Square player option
-    const squareBtn = this.add
-      .image(300, 600, "squareplayer")
-      .setInteractive()
-      .setScale(2);
+    // // Square player option
+    // const squareBtn = this.add
+    //   .image(300, 600, "squareplayer")
+    //   .setInteractive()
+    //   .setScale(2);
 
-    // Circle player option
-    const circleBtn = this.add
-      .image(500, 600, "circleplayer")
-      .setInteractive()
-      .setScale(2);
+    // // Circle player option
+    // const circleBtn = this.add
+    //   .image(500, 600, "circleplayer")
+    //   .setInteractive()
+    //   .setScale(2);
 
-    // Click handlers
-    squareBtn.on("pointerdown", () => {
-      this.scene.start("Game", { selectedCharacter: "squareplayer" });
-    });
+    // // Click handlers
+    // squareBtn.on("pointerdown", () => {
+    //   this.scene.start("Game", { selectedCharacter: "squareplayer" });
+    // });
 
-    circleBtn.on("pointerdown", () => {
-      this.scene.start("Game", { selectedCharacter: "circleplayer" });
-    });
+    // circleBtn.on("pointerdown", () => {
+    //   this.scene.start("Game", { selectedCharacter: "circleplayer" });
+    // });
+    this.createFormButton(this, 150, 500, "circleplayer");
+
+    this.createFormButton(this, 400, 500, "triangleplayer");
+
+    this.createFormButton(this, 650, 500, "squareplayer");
   }
 
   update(time, delta) {
@@ -71,5 +68,42 @@ export class TitleScreen extends Phaser.Scene {
         Math.sin(this.pulseTimer * this.pulseSpeed * 2 * Math.PI);
 
     this.titleImg.setScale(titleScale);
+  }
+
+  createFormButton(scene, x, y, character) {
+    const circleGraphic = scene.add.graphics();
+    circleGraphic.lineStyle(4, 0xffffff); // 4px white border
+    circleGraphic.strokeCircle(0, 0, 96);
+    //onst bgCircle = scene.add.circle(0, 0, 96, 0x333333);
+
+    const shapeImage = scene.add.image(0, 0, character).setScale(1.5);
+
+    const buttonContainer = scene.add
+      .container(x, y, [circleGraphic, shapeImage])
+      .setSize(192, 192)
+      .setInteractive()
+      .on("pointerdown", () => {
+        scene.scene.start("Game", { selectedCharacter: character });
+      });
+
+    buttonContainer.setSize(192, 192);
+    buttonContainer
+      .setInteractive({ useHandCursor: true })
+      .on("pointerover", () => {
+        scene.tweens.add({
+          targets: buttonContainer,
+          scale: 1.1,
+          duration: 150,
+          ease: "Power2",
+        });
+      })
+      .on("pointerout", () => {
+        scene.tweens.add({
+          targets: buttonContainer,
+          scale: 1,
+          duration: 150,
+          ease: "Power2",
+        });
+      });
   }
 }

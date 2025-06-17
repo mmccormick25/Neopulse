@@ -24,11 +24,11 @@ export class Game extends Phaser.Scene {
       this,
       worldWidth / 2,
       worldHeight / 2,
-      "squareplayer",
+      this.selectedCharacter,
       2
     );
 
-    this.input.setDefaultCursor("url(assets/squarecursor.png) 14 14, pointer");
+    this.chooseCursor(this.selectedCharacter);
 
     // Arrow keys input
     this.cursors = this.input.keyboard.createCursorKeys();
@@ -51,5 +51,30 @@ export class Game extends Phaser.Scene {
     this.background.tilePositionY += dy * this.player.speed;
 
     this.player.updateTurret(this.pointer);
+  }
+
+  chooseCursor(selectedCharacter) {
+    switch (selectedCharacter) {
+      case "squareplayer":
+        this.input.setDefaultCursor(
+          "url(assets/images/squarecursor.png) 14 14, pointer"
+        );
+        break;
+      case "circleplayer":
+        this.input.setDefaultCursor(
+          "url(assets/images/circlecursor.png) 14 14, pointer"
+        );
+        break;
+      case "triangleplayer":
+        this.input.setDefaultCursor(
+          "url(assets/images/trianglecursor.png) 14 14, pointer"
+        );
+        break;
+      default:
+        console.error("Unknown character type:", selectedCharacter);
+        this.input.setDefaultCursor(
+          "url(assets/images/squarecursor.png) 14 14, pointer"
+        );
+    }
   }
 }
