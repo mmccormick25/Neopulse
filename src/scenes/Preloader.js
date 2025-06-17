@@ -27,6 +27,20 @@ export class Preloader extends Phaser.Scene {
     // Title screen assets
     this.load.image("title", "title.png");
 
+    this.load.image("background", "assets/background.png");
+
+    // Load font with WebFont Loader
+    this.fontsReady = false; // Flag to check when fonts loaded
+
+    WebFont.load({
+      google: {
+        families: ["Pixelify Sans"], // Your Google font name here
+      },
+      active: () => {
+        this.fontsReady = true;
+      },
+    });
+
     // Player assets
     this.load.image("grid", "grid.png");
     this.load.image("squareplayer", "squareplayer.png");
@@ -39,6 +53,14 @@ export class Preloader extends Phaser.Scene {
     //  For example, you can define global animations here, so we can use them in other scenes.
 
     //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
-    this.scene.start("TitleScreen");
+    this.time.addEvent({
+      delay: 100,
+      callback: () => {
+        if (this.fontsLoaded) {
+          this.scene.start("TitleScreen"); // or MainMenu, etc.
+        }
+      },
+      loop: true,
+    });
   }
 }

@@ -29,8 +29,8 @@ export class TitleScreen extends Phaser.Scene {
     this.pulseTimer = 0; // Time accumulator
 
     this.add.text(this.scale.width / 2, 300, "Select Your Character", {
-      fontFamily: "Jersey 10",
-      fontSize: "500px",
+      fontFamily: "Pixelify Sans",
+      fontSize: "100px",
       color: "#ffffff",
     });
 
