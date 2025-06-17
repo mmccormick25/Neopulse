@@ -1,4 +1,4 @@
-export class Player extends Phaser.Physics.Arcade.Sprite {
+export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, character, speed) {
     super(scene, x, y, character);
 
@@ -43,19 +43,28 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     // Check down: arrow down or S
     else if (cursors.down.isDown || keys.S.isDown) dy = 1;
 
+    this.x += dx * this.speed;
+    this.y += dy * this.speed;
+
     return { dx, dy };
   }
 
-  updateTurret(pointer) {
+  updateTurret(pointer, camera) {
+    this.turret.x = this.x;
+    this.turret.y = this.y;
+
     const pointerX = pointer.x;
     const pointerY = pointer.y;
+
+    // Convert pointer position to world coordinates
+    const worldPoint = camera.getWorldPoint(pointer.x, pointer.y);
 
     // Setting turret angle
     this.turretAngle = Phaser.Math.Angle.Between(
       this.x,
       this.y,
-      pointerX,
-      pointerY
+      worldPoint.x,
+      worldPoint.y
     );
 
     Phaser.Math.RotateAround(this.turret, this.x, this.y, this.turretAngle);
