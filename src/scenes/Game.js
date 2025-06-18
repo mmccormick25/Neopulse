@@ -1,5 +1,6 @@
 import Player from "../gameobjects/Player.js";
 import Enemy from "../gameobjects/Enemy.js";
+import Gun from "../gameobjects/Gun.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -15,12 +16,15 @@ export class Game extends Phaser.Scene {
     const worldWidth = 800;
     const worldHeight = 800;
 
-    this.background = this.add
-      .tileSprite(0, 0, this.scale.width, this.scale.height, "grid")
-      .setOrigin(0, 0)
-      .setTileScale(4);
+    // Setting black background
+    this.cameras.main.setBackgroundColor("#000000");
 
-    this.background.setScrollFactor(0);
+    // this.background = this.add
+    //   .tileSprite(0, 0, this.scale.width, this.scale.height, "grid")
+    //   .setOrigin(0, 0)
+    //   .setTileScale(4);
+
+    // this.background.setScrollFactor(0);
 
     // Create player at the center of the world
     this.player = new Player(
@@ -28,10 +32,13 @@ export class Game extends Phaser.Scene {
       worldWidth / 2,
       worldHeight / 2,
       this.selectedCharacter,
-      2
+      120,
+      3
     );
 
     this.cameras.main.startFollow(this.player);
+
+    this.cameras.main.roundPixels = true;
 
     this.chooseCursor(this.selectedCharacter);
 
@@ -42,20 +49,47 @@ export class Game extends Phaser.Scene {
     // Pointer input
     this.pointer = this.input.activePointer;
 
+    this.gun = new Gun(this, "defaultbullet");
+
     // Creating enemy group
     this.enemies = this.physics.add.group({
       classType: Enemy,
       runChildUpdate: true,
     });
 
+    // Enabling collision between enemies
+    this.physics.add.collider(this.enemies, this.enemies);
+
+    // Enabling collision between player and enemies
+    this.physics.add.collider(this.player, this.enemies, (player, enemy) => {});
+
+    this.physics.add.overlap(
+      this.gun.bullets,
+      this.enemies,
+      (bullet, enemy) => {
+        bullet.hitEnemy(enemy);
+      }
+    );
+
+    // Create the enemy animation once
+    this.anims.create({
+      key: "enemy_walk",
+      frames: this.anims.generateFrameNumbers("blobenemy", {
+        start: 0,
+        end: 2,
+      }),
+      frameRate: 8,
+      repeat: -1,
+    });
+
     // Example: spawn 5 enemies
     for (let i = 0; i < 5; i++) {
-      this.spawnEnemy(100 + i * 100, 100);
+      this.spawnEnemy(100 + i * 100, 3);
     }
   }
 
   spawnEnemy(x, y) {
-    const enemy = this.enemies.get(x, y, "errorsprite");
+    const enemy = this.enemies.get(x, y, "blobenemy");
 
     // If enemy was found or creeated, set its properties
     if (enemy) {
@@ -69,23 +103,21 @@ export class Game extends Phaser.Scene {
   }
 
   update() {
-    const { dx, dy } = this.player.getMovementDirection(
-      this.cursors,
-      this.keys
-    );
+    this.player.movePlayer(this.cursors, this.keys);
+    this.player.updateTurret(this.pointer, this.cameras.main);
 
-    // // Scroll background in opposite direction
-    this.background.tilePositionX = this.player.x * 0.5;
-    this.background.tilePositionY = this.player.y * 0.5;
+    this.gun.fire(this.player.x, this.player.y, this.player.turretAngle);
+
+    // // // Scroll background in opposite direction
+    // this.background.tilePositionX = this.player.x * 0.5;
+    // this.background.tilePositionY = this.player.y * 0.5;
 
     // Update enemies
     this.enemies.children.iterate((enemy) => {
       if (enemy.active) {
-        enemy.updateEnemy(dx * this.player.speed, dy * this.player.speed);
+        enemy.updateEnemy(this.player.x, this.player.y);
       }
     });
-
-    this.player.updateTurret(this.pointer, this.cameras.main);
   }
 
   chooseCursor(selectedCharacter) {

@@ -1,11 +1,15 @@
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, character, speed) {
+  constructor(scene, x, y, character, speed, health) {
     super(scene, x, y, character);
 
+    // Initialize the player sprite
     scene.add.existing(this);
+    // Initialize physics for players
+    scene.physics.add.existing(this);
 
     this.setScale(0.75);
     this.speed = speed;
+    this.health = health;
 
     // Choosing turret based on character type
     switch (character) {
@@ -24,12 +28,14 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         break;
     }
 
-    this.turret.setOrigin(0.5);
-    this.turret.setScale(0.66);
+    this.setDepth(10);
+
+    this.turret.setScale(0.75);
+    this.turret.setDepth(10); // Ensure turret is above enemies
     this.turretAngle = 0;
   }
 
-  getMovementDirection(cursors, keys) {
+  movePlayer(cursors, keys) {
     let dx = 0;
     let dy = 0;
 
@@ -43,13 +49,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     // Check down: arrow down or S
     else if (cursors.down.isDown || keys.S.isDown) dy = 1;
 
-    this.x += dx * this.speed;
-    this.y += dy * this.speed;
-
-    return { dx, dy };
+    this.body.setVelocity(dx * this.speed, dy * this.speed);
   }
 
   updateTurret(pointer, camera) {
+    // Locking turret position to player
     this.turret.x = this.x;
     this.turret.y = this.y;
 
@@ -66,8 +70,6 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       worldPoint.x,
       worldPoint.y
     );
-
-    Phaser.Math.RotateAround(this.turret, this.x, this.y, this.turretAngle);
 
     this.turret.rotation = this.turretAngle + Math.PI / 2;
   }
