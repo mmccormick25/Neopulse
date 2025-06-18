@@ -50,10 +50,17 @@ export class Preloader extends Phaser.Scene {
 
     // Enemy assets
     this.load.image("errorsprite", "errorsprite.png");
-
     this.load.spritesheet("blobenemy", "blobenemy_spritesheet.png", {
       frameWidth: 32, // Set to your frame width
       frameHeight: 32, // Set to your frame height
+    });
+    this.load.spritesheet("ghost", "ghost_spritesheet.png", {
+      frameWidth: 64, // Set to your frame width
+      frameHeight: 64, // Set to your frame height
+    });
+    this.load.spritesheet("ghost_die", "ghostdie_spritesheet.png", {
+      frameWidth: 64, // Set to your frame width
+      frameHeight: 64, // Set to your frame height
     });
 
     // Gun assets

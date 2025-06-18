@@ -10,6 +10,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     // Setting enemy properties
     this.speed = speed;
     this.health = health;
+    this.dying = false;
+
+    this.setScale(0.75);
 
     this.play("enemy_walk");
   }
@@ -36,9 +39,19 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   damage(amount) {
+    if (this.dying) return; // Prevent further damage if already dying
+
     // Reduce enemy health by the damage amount
     this.health -= amount;
     console.log(`Enemy damaged! Current health: ${this.health}`);
+
+    // Tint the enemy blue
+    this.setTint(0x00fffd);
+
+    // Remove the tint after 100ms
+    this.scene.time.delayedCall(100, () => {
+      if (this.active) this.clearTint();
+    });
 
     // Check if enemy health is less than or equal to 0
     this.checkHealth();
@@ -47,8 +60,18 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   checkHealth() {
     console.log(`Enemy health: ${this.health}`);
     // If enemy health is less than or equal to 0, deactivate it
-    if (this.health <= 0) {
-      this.destroy();
+    if (this.health <= 0 && !this.dying) {
+      this.dying = true; // Prevent further damage processing
+
+      // Disable physics body to turn off collisions
+      this.body.enable = false;
+
+      this.play("enemy_die", true);
+
+      // Destroy only after the death animation is complete
+      this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+        this.destroy();
+      });
     }
   }
 }

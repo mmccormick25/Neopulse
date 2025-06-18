@@ -6,7 +6,9 @@ export default class Gun {
     this.bulletTexture = bulletTexture;
     this.fireRate = fireRate; // milliseconds between shots
     this.bulletSpeed = bulletSpeed;
-    this.lastFired = 0;
+
+    // Next time stamp the gun is allowed to fire
+    this.nextFireTime = 1000;
 
     // Create a group for bullets
     this.bullets = scene.physics.add.group({
@@ -19,11 +21,9 @@ export default class Gun {
     // Recording current time
     const now = this.scene.time.now;
 
-    // Check if enough time has passed since the last shot
-    if (now - this.lastFired < this.fireRate) return;
+    if (now < this.nextFireTime) return;
 
-    // Updating last fired time
-    this.lastFired = now;
+    this.nextFireTime = now + this.fireRate;
 
     // Calculate velocity
     const dx = Math.cos(angle);
