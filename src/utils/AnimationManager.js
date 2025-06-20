@@ -11,7 +11,7 @@ export default class AnimationManager {
       repeat: -1,
     });
 
-    // Create ghost ie animation
+    // Create ghost die animation
     scene.anims.create({
       key: "enemy_die",
       frames: scene.anims.generateFrameNumbers("ghost_die", {

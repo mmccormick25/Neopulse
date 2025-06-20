@@ -1,3 +1,5 @@
+import TextUtils from "../utils/TextUtils.js";
+
 export class TitleScreen extends Phaser.Scene {
   constructor() {
     super("TitleScreen");
@@ -31,31 +33,13 @@ export class TitleScreen extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
-    // // Square player option
-    // const squareBtn = this.add
-    //   .image(300, 600, "squareplayer")
-    //   .setInteractive()
-    //   .setScale(2);
-
-    // // Circle player option
-    // const circleBtn = this.add
-    //   .image(500, 600, "circleplayer")
-    //   .setInteractive()
-    //   .setScale(2);
-
-    // // Click handlers
-    // squareBtn.on("pointerdown", () => {
-    //   this.scene.start("Game", { selectedCharacter: "squareplayer" });
-    // });
-
-    // circleBtn.on("pointerdown", () => {
-    //   this.scene.start("Game", { selectedCharacter: "circleplayer" });
-    // });
     this.createFormButton(this, 150, 500, "circleplayer");
 
     this.createFormButton(this, 400, 500, "triangleplayer");
 
     this.createFormButton(this, 650, 500, "squareplayer");
+
+    //TextUtils.combineTextAndSymbol(this, 400, 700, "Made by ", "github");
   }
 
   update(time, delta) {

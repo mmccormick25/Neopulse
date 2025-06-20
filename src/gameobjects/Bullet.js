@@ -1,5 +1,5 @@
 export default class Bullet extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, damage = 1) {
+  constructor(scene, x, y, texture, damage = 34) {
     super(scene, x, y, texture);
 
     this.damage = damage; // Bullet damage

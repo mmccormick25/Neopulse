@@ -37,23 +37,27 @@ export class Preloader extends Phaser.Scene {
     this.load.image("squareplayer", "squareplayer.png");
     this.load.image("squareturret", "squareturret.png");
     this.load.image("squarecursor", "squarecursor.png");
-
     // Circle player assets
     this.load.image("circleplayer", "circleplayer.png");
     this.load.image("circleturret", "circleturret.png");
     this.load.image("circlecursor", "circlecursor.png");
-
     // Triangle player assets
     this.load.image("triangleplayer", "triangleplayer.png");
     this.load.image("triangleturret", "triangleturret.png");
     this.load.image("trianglecursor", "trianglecursor.png");
 
+    // Gun assets
+    this.load.image("defaultbullet", "defaultbullet.png");
+
     // Enemy assets
     this.load.image("errorsprite", "errorsprite.png");
+
     this.load.spritesheet("blobenemy", "blobenemy_spritesheet.png", {
       frameWidth: 32, // Set to your frame width
       frameHeight: 32, // Set to your frame height
     });
+
+    // Ghost assets
     this.load.spritesheet("ghost", "ghost_spritesheet.png", {
       frameWidth: 64, // Set to your frame width
       frameHeight: 64, // Set to your frame height
@@ -63,14 +67,22 @@ export class Preloader extends Phaser.Scene {
       frameHeight: 64, // Set to your frame height
     });
 
-    // Gun assets
-    this.load.image("defaultbullet", "defaultbullet.png");
+    // Advanced ghost assets
+    this.load.spritesheet("advancedghost", "advancedghost_spritesheet.png", {
+      frameWidth: 64, // Set to your frame width
+      frameHeight: 64, // Set to your frame height
+    });
+    this.load.spritesheet(
+      "advancedghost_die",
+      "advancedghostdie_spritesheet.png",
+      {
+        frameWidth: 64, // Set to your frame width
+        frameHeight: 64, // Set to your frame height
+      }
+    );
   }
 
   create() {
-    //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-    //  For example, you can define global animations here, so we can use them in other scenes.
-
     this.scene.start("TitleScreen"); // or MainMenu, etc.
   }
 }

@@ -23,8 +23,12 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     const dy = playerY - this.y;
     const distance = Math.sqrt(dx * dx + dy * dy);
 
-    // If enemy far enough from player, move towards player
-    if (distance > 0) {
+    // Despawn enemy if too far from player
+    if (distance > 600) {
+      this.setActive(false);
+      this.setVisible(false);
+      // If enemy far enough from player, move towards player
+    } else if (distance > 0) {
       const normalizedDx = dx / distance;
       const normalizedDy = dy / distance;
 
@@ -43,7 +47,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     // Reduce enemy health by the damage amount
     this.health -= amount;
-    console.log(`Enemy damaged! Current health: ${this.health}`);
 
     // Tint the enemy blue
     this.setTint(0x00fffd);
@@ -58,7 +61,6 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
   }
 
   checkHealth() {
-    console.log(`Enemy health: ${this.health}`);
     // If enemy health is less than or equal to 0, deactivate it
     if (this.health <= 0 && !this.dying) {
       this.dying = true; // Prevent further damage processing

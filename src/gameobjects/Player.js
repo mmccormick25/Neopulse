@@ -10,6 +10,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setScale(0.75);
     this.speed = speed;
     this.health = health;
+    this.knockbackTimer = 0;
 
     // Choosing turret based on character type
     switch (character) {
@@ -35,7 +36,39 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.turretAngle = 0;
   }
 
+  // Function when player is hit by an enemy
+  playerHit(enemyX, enemyY) {
+    // Reduce player health
+    this.health -= 1;
+
+    this.setTint(0xff0000); // Tint player red on hit
+
+    // Getting angle to launch player at
+    const launchAngle = Phaser.Math.Angle.Between(
+      enemyX,
+      enemyY,
+      this.x,
+      this.y
+    );
+
+    // Setting velocity to launch player away from enemy
+    this.setVelocity(Math.cos(launchAngle) * 500, Math.sin(launchAngle) * 500);
+    // Setting knockback timer
+    this.knockbackTimer = 100;
+  }
+
   movePlayer(cursors, keys) {
+    // If player is knocked back, do not allow movement
+    if (this.knockbackTimer > 0) {
+      this.knockbackTimer -= this.scene.game.loop.delta;
+      if (this.knockbackTimer <= 0) {
+        this.knockbackTimer = 0; // Reset timer
+        this.setVelocity(0, 0); // Stop movement after knockback
+        this.clearTint(); // Clear tint after knockback
+      }
+      return; // Skip further movement logic
+    }
+
     let dx = 0;
     let dy = 0;
 

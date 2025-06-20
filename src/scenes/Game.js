@@ -2,6 +2,7 @@ import Player from "../gameobjects/Player.js";
 import Enemy from "../gameobjects/Enemy.js";
 import Gun from "../gameobjects/Gun.js";
 import AnimationManager from "../utils/AnimationManager.js";
+import EnemySpawner from "../gameobjects/EnemySpawner.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -15,8 +16,8 @@ export class Game extends Phaser.Scene {
 
   create() {
     // Setting world dimensions
-    const worldWidth = 800;
-    const worldHeight = 800;
+    this.worldWidth = 800;
+    this.worldHeight = 800;
 
     // Setting black background
     this.cameras.main.setBackgroundColor("#000000");
@@ -37,8 +38,8 @@ export class Game extends Phaser.Scene {
     // Create player at the center of the world
     this.player = new Player(
       this,
-      worldWidth / 2,
-      worldHeight / 2,
+      this.worldWidth / 2,
+      this.worldHeight / 2,
       this.selectedCharacter,
       120,
       3
@@ -64,6 +65,7 @@ export class Game extends Phaser.Scene {
     //////////////////
     // World objects
     //////////////////
+
     */
 
     // Creating enemy group
@@ -72,11 +74,15 @@ export class Game extends Phaser.Scene {
       runChildUpdate: true,
     });
 
+    this.enemySpawner = new EnemySpawner(this, this.enemies);
+
     // Enabling collision between enemies
     this.physics.add.collider(this.enemies, this.enemies);
 
     // Enabling collision between player and enemies
-    this.physics.add.collider(this.player, this.enemies, (player, enemy) => {});
+    this.physics.add.collider(this.player, this.enemies, (player, enemy) => {
+      player.playerHit(enemy.x, enemy.y);
+    });
 
     this.physics.add.overlap(
       this.gun.bullets,
@@ -91,7 +97,7 @@ export class Game extends Phaser.Scene {
 
     // Example: spawn 5 enemies
     for (let i = 0; i < 5; i++) {
-      this.spawnEnemy(100 + i * 100, 3);
+      this.enemySpawner.spawnEnemy(100 + i * 100, 3, "ghost", 3, 80);
     }
   }
 
@@ -120,20 +126,6 @@ export class Game extends Phaser.Scene {
     }
   }
 
-  spawnEnemy(x, y) {
-    const enemy = this.enemies.get(x, y, "ghost");
-
-    // If enemy was found or created, set its properties
-    if (enemy) {
-      enemy.setActive(true);
-      enemy.setVisible(true);
-
-      // Setting enemy health and speed
-      enemy.health = 3;
-      enemy.speed = 80;
-    }
-  }
-
   update() {
     // Moving player in world
     this.player.movePlayer(this.cursors, this.keys);
@@ -154,5 +146,7 @@ export class Game extends Phaser.Scene {
         enemy.updateEnemy(this.player.x, this.player.y);
       }
     });
+
+    this.enemySpawner.update(this.player.x, this.player.y); // Update enemy spawner
   }
 }

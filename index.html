@@ -49,10 +49,99 @@
         text-decoration: none;
         color: inherit;
       }
+
+      /* .controls-panel {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+      }
+
+      .keys-display {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+      }
+
+      .keys-spacer {
+        color: white;
+        font-size: 32px;
+        font-family: "Pixelify Sans", sans-serif;
+
+        padding-top: 90px;
+      }
+
+      .controls-label {
+        color: rgb(255, 69, 224);
+        font-size: 42px;
+        font-family: "Pixelify Sans", sans-serif;
+        margin-bottom: 30px;
+      } */
+
+      .main-layout {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh; /* Full viewport height */
+        width: 100vw; /* Full viewport width */
+      }
+
+      #game-container {
+        width: 768px; /* or your game's width */
+        height: 768px; /* or your game's height */
+        background: #222;
+        border-radius: 16px;
+        box-shadow: 0 0 32px #000a;
+        flex-shrink: 0; /* Prevent shrinking */
+        display: block;
+      }
+
+      .controls-image {
+        max-width: 100%;
+        max-height: 50vh;
+        object-fit: contain;
+        flex: 1 1 0;
+        /* Optionally add margin or padding */
+      }
+
+      .empty-space {
+        flex: 1 1 0; /* Allow this div to grow and shrink */
+      }
+
+      /* .controls-image {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        width: 300px;
+        height: auto;
+      } */
     </style>
   </head>
   <body>
-    <div id="game-container"></div>
+    <!-- <div class="controls-panel">
+      <div class="keys-display">
+        <img src="./assets/images/wasd.png" alt="WASD" />
+        <p class="keys-spacer">or</p>
+        <img src="./assets/images/arrowkeys.png" alt="Arrok Keys" />
+      </div>
+      <p class="controls-label">Move</p>
+
+      <img src="./assets/images/mouse.png" alt="Mouse" />
+      <p class="controls-label">Fire</p>
+    </div> -->
+    <div class="main-layout">
+      <img
+        src="./assets/images/controls.png"
+        alt="WASD to Move, Click to Fire."
+        class="controls-image"
+      />
+      <div id="game-container"></div>
+      <div class="empty-space"></div>
+    </div>
     <script src="./phaser.js"></script>
     <script type="module" src="./src/main.js"></script>
   </body>
