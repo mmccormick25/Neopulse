@@ -46,6 +46,8 @@ export class Preloader extends Phaser.Scene {
     this.load.image("triangleturret", "triangleturret.png");
     this.load.image("trianglecursor", "trianglecursor.png");
 
+    this.load.image("heart", "heart.png");
+
     // Gun assets
     this.load.image("defaultbullet", "defaultbullet.png");
 

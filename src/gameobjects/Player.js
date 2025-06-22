@@ -1,3 +1,5 @@
+import HealthBar from "../gameobjects/HealthBar.js";
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
   constructor(scene, x, y, character, speed, health) {
     super(scene, x, y, character);
@@ -11,6 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.speed = speed;
     this.health = health;
     this.knockbackTimer = 0;
+    this.maxHealth = health;
 
     // Choosing turret based on character type
     switch (character) {
@@ -34,12 +37,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.turret.setScale(0.75);
     this.turret.setDepth(10); // Ensure turret is above enemies
     this.turretAngle = 0;
+
+    this.healthBar = new HealthBar(scene, this.maxHealth);
+    this.healthBar.drawHealth();
   }
 
   // Function when player is hit by an enemy
   playerHit(enemyX, enemyY) {
     // Reduce player health
     this.health -= 1;
+
+    // Drawing player health
+    this.healthBar.drawHealth(this.health);
+
+    if (this.health <= 0) {
+      this.scene.endGame();
+      return;
+    }
 
     this.setTint(0xff0000); // Tint player red on hit
 

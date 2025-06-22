@@ -1,6 +1,6 @@
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-  constructor(scene, x, y, texture, speed, health) {
-    super(scene, x, y, texture);
+  constructor(scene, x, y, id, speed, health) {
+    super(scene, x, y, id);
 
     // Initialize the enemy sprite
     scene.add.existing(this);
@@ -8,13 +8,14 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     // Setting enemy properties
+    this.id = id;
     this.speed = speed;
     this.health = health;
     this.dying = false;
 
     this.setScale(0.75);
 
-    this.play("enemy_walk");
+    this.play(id + "_walk", true);
   }
 
   updateEnemy(playerX, playerY) {
@@ -68,7 +69,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
       // Disable physics body to turn off collisions
       this.body.enable = false;
 
-      this.play("enemy_die", true);
+      this.play(this.id + "_die", true);
 
       // Destroy only after the death animation is complete
       this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {

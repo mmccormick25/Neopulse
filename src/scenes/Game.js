@@ -3,6 +3,7 @@ import Enemy from "../gameobjects/Enemy.js";
 import Gun from "../gameobjects/Gun.js";
 import AnimationManager from "../utils/AnimationManager.js";
 import EnemySpawner from "../gameobjects/EnemySpawner.js";
+import { GameOver } from "./GameOver.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -94,11 +95,6 @@ export class Game extends Phaser.Scene {
 
     // Initializing animations
     AnimationManager.createAnimations(this);
-
-    // Example: spawn 5 enemies
-    for (let i = 0; i < 5; i++) {
-      this.enemySpawner.spawnEnemy(100 + i * 100, 3, "ghost", 3, 80);
-    }
   }
 
   chooseCursor(selectedCharacter) {
@@ -124,6 +120,20 @@ export class Game extends Phaser.Scene {
           "url(assets/images/squarecursor.png) 14 14, pointer"
         );
     }
+  }
+
+  endGame() {
+    // Darkening game scene
+    const darkOverlay = this.add.graphics();
+    darkOverlay.fillStyle(0x000000, 0.7); // 0.5 is 50% opacity
+    darkOverlay.fillRect(0, 0, this.scale.width, this.scale.height);
+    darkOverlay.setDepth(9999); // Make sure it's above everything else
+    darkOverlay.setScrollFactor(0); // So it stays fixed on the screen
+
+    // Pausing game scene
+    this.scene.pause();
+    // Launching game over
+    this.scene.launch("GameOver");
   }
 
   update() {

@@ -67,7 +67,7 @@ export class TitleScreen extends Phaser.Scene {
       .setSize(192, 192)
       .setInteractive()
       .on("pointerdown", () => {
-        scene.scene.start("Game", { selectedCharacter: character });
+        this.scene.start("Game", { selectedCharacter: character });
       });
 
     buttonContainer.setSize(192, 192);
