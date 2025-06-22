@@ -33,6 +33,7 @@ export class TitleScreen extends Phaser.Scene {
       })
       .setOrigin(0.5);
 
+    // Player buttons
     this.createFormButton(this, 150, 500, "circleplayer");
 
     this.createFormButton(this, 400, 500, "triangleplayer");

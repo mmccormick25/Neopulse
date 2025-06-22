@@ -1,14 +1,14 @@
 import Bullet from "./Bullet.js";
 
 export default class Gun {
-  constructor(scene, bulletTexture, fireRate = 100, bulletSpeed = 2000) {
+  constructor(scene, bulletTexture, fireRate = 300, bulletSpeed = 2000) {
     this.scene = scene;
     this.bulletTexture = bulletTexture;
     this.fireRate = fireRate; // milliseconds between shots
     this.bulletSpeed = bulletSpeed;
 
     // Next time stamp the gun is allowed to fire
-    this.nextFireTime = 1500;
+    this.nextFireTime = 0;
 
     // Create a group for bullets
     this.bullets = scene.physics.add.group({

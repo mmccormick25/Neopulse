@@ -20,6 +20,11 @@ export class Game extends Phaser.Scene {
     this.worldWidth = 800;
     this.worldHeight = 800;
 
+    // Recording scene start time
+    this.sceneStartTime = this.time.now;
+
+    console.log("Scene created at:", this.sceneStartTime);
+
     // Setting black background
     this.cameras.main.setBackgroundColor("#000000");
 
@@ -123,6 +128,9 @@ export class Game extends Phaser.Scene {
   }
 
   endGame() {
+    // Resetting cursor to default
+    this.input.setDefaultCursor("default");
+
     // Darkening game scene
     const darkOverlay = this.add.graphics();
     darkOverlay.fillStyle(0x000000, 0.7); // 0.5 is 50% opacity

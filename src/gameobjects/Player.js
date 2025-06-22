@@ -13,6 +13,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.speed = speed;
     this.health = health;
     this.knockbackTimer = 0;
+    this.invincibilityTimer = 0;
     this.maxHealth = health;
 
     // Choosing turret based on character type
@@ -44,6 +45,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
   // Function when player is hit by an enemy
   playerHit(enemyX, enemyY) {
+    // If player is invincible, ignore hit
+    if (this.invincibilityTimer > 0) return;
+
     // Reduce player health
     this.health -= 1;
 
@@ -69,6 +73,8 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     this.setVelocity(Math.cos(launchAngle) * 500, Math.sin(launchAngle) * 500);
     // Setting knockback timer
     this.knockbackTimer = 100;
+
+    this.invincibilityTimer = 1000; // Set invincibility for 1 second
   }
 
   movePlayer(cursors, keys) {
@@ -78,9 +84,17 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
       if (this.knockbackTimer <= 0) {
         this.knockbackTimer = 0; // Reset timer
         this.setVelocity(0, 0); // Stop movement after knockback
-        this.clearTint(); // Clear tint after knockback
+        this.setTint(0xff00e1); // Set invincibility tint
       }
       return; // Skip further movement logic
+    }
+
+    if (this.invincibilityTimer > 0) {
+      this.invincibilityTimer -= this.scene.game.loop.delta;
+      if (this.invincibilityTimer <= 0) {
+        this.invincibilityTimer = 0; // Reset timer
+        this.clearTint(); // Clear tint after invincibility
+      }
     }
 
     let dx = 0;

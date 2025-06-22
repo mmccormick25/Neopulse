@@ -6,34 +6,55 @@ export default class EnemySpawner {
     this.enemiesGroup = enemiesGroup;
 
     this.nextSpawnTime = 2000;
-    this.spawnDelay = 1000;
 
     this.spawnTables = [
       // Level 0
-      [
-        { EnemyClass: Enemy, weight: 50, id: "ghost", speed: 60, health: 100 },
-        {
-          EnemyClass: Enemy,
-          weight: 50,
-          id: "advancedghost",
-          speed: 120,
-          health: 100,
-        },
-      ],
+      {
+        spawnList: [
+          {
+            EnemyClass: Enemy,
+            weight: 100,
+            id: "ghost",
+            speed: 60,
+            health: 100,
+          },
+        ],
+        spawnDelay: 2 * 1000, // 2 seconds
+        waveLength: 10 * 1000, // 20 seconds
+      },
       // Level 1
-      [
-        { EnemyClass: Enemy, weight: 10, id: "ghost", speed: 60, health: 100 },
-        {
-          EnemyClass: Enemy,
-          weight: 90,
-          id: "advancedghost",
-          speed: 60,
-          health: 100,
-        },
-      ],
+      {
+        spawnList: [
+          {
+            EnemyClass: Enemy,
+            weight: 100,
+            id: "advancedghost",
+            speed: 120,
+            health: 100,
+          },
+        ],
+        spawnDelay: 1000, // 2 seconds
+        waveLength: 20 * 1000, // 20 seconds
+      },
+      // Level 1
+      // [
+      //   { EnemyClass: Enemy, weight: 10, id: "ghost", speed: 60, health: 100 },
+      //   {
+      //     EnemyClass: Enemy,
+      //     weight: 90,
+      //     id: "advancedghost",
+      //     speed: 60,
+      //     health: 100,
+      //   },
+      // ],
     ];
 
-    this.currentTable = "easy"; // or set dynamically
+    this.spawnLevel = 0; // Starting spawn level
+
+    this.currentSpawnList = this.spawnTables[0].spawnList; // List of enemies to spawn
+    this.currentSpawnDelay = this.spawnTables[0].spawnDelay; // Delay between spawns
+
+    this.waveEndTime = this.scene.time.now + this.spawnTables[0].waveLength; // End time of the current wave
   }
 
   getRandomEnemyFromTable(spawnTable) {
@@ -60,24 +81,35 @@ export default class EnemySpawner {
     return table[0];
   }
 
-  getSpawnPosition(playerX, playerY) {
+  getRandomSpawnPosition(playerX, playerY) {
     const randomAngle = Math.random() * Math.PI * 2; // Random angle in radians
-    console.log(`Random angle for enemy spawn: ${randomAngle}`);
     const enemyX = playerX + Math.cos(randomAngle) * 450; // Random X position around player
     const enemyY = playerY + Math.sin(randomAngle) * 450; // Random Y position around player
-    console.log(`Enemy spawn position: (${enemyX}, ${enemyY})`);
     return { x: enemyX, y: enemyY };
   }
 
   update(playerX, playerY) {
+    if (this.scene.time.now > this.waveEndTime) {
+      if (this.spawnLevel < this.spawnTables.length - 1) {
+        // Move to the next spawn level
+        this.spawnLevel++;
+        this.currentSpawnList = this.spawnTables[this.spawnLevel].spawnList;
+        this.currentSpawnDelay = this.spawnTables[this.spawnLevel].spawnDelay;
+        this.waveEndTime =
+          this.scene.time.now + this.spawnTables[this.spawnLevel].waveLength;
+
+        console.log(`Spawn level increased to ${this.spawnLevel}`);
+      }
+    }
+
     // Spawning enemy once every spawnDelay milliseconds
     if (this.scene.time.now < this.nextSpawnTime) return;
-    this.nextSpawnTime = this.scene.time.now + this.spawnDelay;
+    this.nextSpawnTime = this.scene.time.now + this.currentSpawnDelay;
 
     // Getting random enemy from current spawn table
-    const enemyEntry = this.getRandomEnemyFromTable(this.spawnTables[0]);
+    const enemyEntry = this.getRandomEnemyFromTable(this.currentSpawnList);
 
-    const { x, y } = this.getSpawnPosition(playerX, playerY);
+    const { x, y } = this.getRandomSpawnPosition(playerX, playerY);
 
     this.spawnEnemy(x, y, enemyEntry.id, enemyEntry.speed, enemyEntry.health);
   }
