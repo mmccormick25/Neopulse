@@ -6,18 +6,21 @@ export default class HealthBar {
   }
 
   drawHealth(health = this.maxHealth) {
+    // Remove old border
+    this.healthBorderGraphic?.destroy();
     // Remove old hearts
     this.hearts.forEach((heart) => heart.destroy());
     this.hearts = [];
 
-    const healthBorderGraphic = this.scene.add.graphics();
-    healthBorderGraphic
+    this.healthBorderGraphic = this.scene.add
+      .graphics()
       .lineStyle(5, 0xffffff, 1.0)
       .strokeRect(32, 96, this.maxHealth * 58, 62)
       .setDepth(1000)
       .setScrollFactor(0);
 
     for (let i = 0; i < health; i++) {
+      console.log("Drawing heart at index:", i);
       const heart = this.scene.add
         .image(64 + i * 54, 128, "heart")
         .setScale(1.5)

@@ -58,23 +58,22 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     });
 
     // Check if enemy health is less than or equal to 0
-    this.checkHealth();
+    if (this.health <= 0 && !this.dying) {
+      this.die();
+    }
   }
 
-  checkHealth() {
-    // If enemy health is less than or equal to 0, deactivate it
-    if (this.health <= 0 && !this.dying) {
-      this.dying = true; // Prevent further damage processing
+  die() {
+    this.dying = true; // Prevent further damage processing
 
-      // Disable physics body to turn off collisions
-      this.body.enable = false;
+    // Disable physics body to turn off collisions
+    this.body.enable = false;
 
-      this.play(this.id + "_die", true);
+    this.play(this.id + "_die", true);
 
-      // Destroy only after the death animation is complete
-      this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
-        this.destroy();
-      });
-    }
+    // Destroy only after the death animation is complete
+    this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
+      this.destroy();
+    });
   }
 }

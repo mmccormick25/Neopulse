@@ -134,4 +134,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     this.turret.rotation = this.turretAngle + Math.PI / 2;
   }
+
+  updateMaxHealth(newMaxHealth) {
+    // Update max health and redraw health bar
+    this.maxHealth = newMaxHealth;
+    this.healthBar.maxHealth = newMaxHealth;
+    this.healthBar.drawHealth(this.health);
+  }
 }

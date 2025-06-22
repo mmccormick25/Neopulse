@@ -33,6 +33,10 @@ export class Preloader extends Phaser.Scene {
     // Grid background
     this.load.image("grid", "grid.png");
 
+    // Icons
+    this.load.image("speedicon", "speedicon.png");
+    this.load.image("bulletsizeicon", "bulletsizeicon.png");
+
     // Square player assets
     this.load.image("squareplayer", "squareplayer.png");
     this.load.image("squareturret", "squareturret.png");

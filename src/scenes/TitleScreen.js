@@ -26,7 +26,7 @@ export class TitleScreen extends Phaser.Scene {
     await document.fonts.load('100px "Pixelify Sans"');
 
     this.add
-      .text(this.scale.width / 2, 300, "Pick starting form", {
+      .text(this.scale.width / 2, 330, "Pick starting form", {
         fontFamily: "Pixelify Sans",
         fontSize: "48px",
         color: "#ffffff",
@@ -35,12 +35,20 @@ export class TitleScreen extends Phaser.Scene {
 
     // Player buttons
     this.createFormButton(this, 150, 500, "circleplayer");
+    TextUtils.combineTextAndSymbol(this, 112, 650, 1.5, "+ ", "heart");
 
     this.createFormButton(this, 400, 500, "triangleplayer");
+    TextUtils.combineTextAndSymbol(this, 370, 650, 1, "+ 10%   ", "speedicon");
 
     this.createFormButton(this, 650, 500, "squareplayer");
-
-    //TextUtils.combineTextAndSymbol(this, 400, 700, "Made by ", "github");
+    TextUtils.combineTextAndSymbol(
+      this,
+      612,
+      650,
+      1,
+      "+ 10%      ",
+      "bulletsizeicon"
+    );
   }
 
   update(time, delta) {

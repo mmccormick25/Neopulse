@@ -50,6 +50,9 @@ export class Game extends Phaser.Scene {
       120,
       3
     );
+
+    this.giveStartingBuffs();
+
     // Choosing cursor based on selected character
     this.chooseCursor(this.selectedCharacter);
 
@@ -87,6 +90,8 @@ export class Game extends Phaser.Scene {
 
     // Enabling collision between player and enemies
     this.physics.add.collider(this.player, this.enemies, (player, enemy) => {
+      // Kill enemy when player collides with it
+      enemy.die();
       player.playerHit(enemy.x, enemy.y);
     });
 
@@ -100,6 +105,18 @@ export class Game extends Phaser.Scene {
 
     // Initializing animations
     AnimationManager.createAnimations(this);
+  }
+
+  giveStartingBuffs() {
+    // Giving player starting buffs based on selected character
+    switch (this.selectedCharacter) {
+      case "circleplayer":
+        this.player.health = 4;
+        this.player.updateMaxHealth(4); // Circle player starts with 4 health
+        break;
+      case "triangleplayer":
+        this.player.speed = Math.round(this.player.speed * 1.1); // Triangle player is faster
+    }
   }
 
   chooseCursor(selectedCharacter) {
