@@ -110,6 +110,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     // Check down: arrow down or S
     else if (cursors.down.isDown || keys.S.isDown) dy = 1;
 
+    if (dx !== 0 && dy !== 0) {
+      // This is the side length of a triangle with a hypotenuse of length 1
+      const norm = Math.SQRT1_2;
+      dx *= norm;
+      dy *= norm;
+    }
+
     this.body.setVelocity(dx * this.speed, dy * this.speed);
   }
 

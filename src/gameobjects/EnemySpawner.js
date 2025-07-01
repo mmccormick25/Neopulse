@@ -7,6 +7,8 @@ export default class EnemySpawner {
 
     this.nextSpawnTime = 2000;
 
+    const defaultWaveLength = 10 * 1000; // 10 seconds
+
     this.spawnTables = [
       // Level 0
       {
@@ -20,9 +22,30 @@ export default class EnemySpawner {
           },
         ],
         spawnDelay: 2 * 1000, // 2 seconds
-        waveLength: 10 * 1000, // 20 seconds
+        waveLength: defaultWaveLength, // 10 seconds
       },
       // Level 1
+      {
+        spawnList: [
+          {
+            EnemyClass: Enemy,
+            weight: 50,
+            id: "ghost",
+            speed: 60,
+            health: 100,
+          },
+          {
+            EnemyClass: Enemy,
+            weight: 50,
+            id: "advancedghost",
+            speed: 120,
+            health: 100,
+          },
+        ],
+        spawnDelay: 2000, // 2 seconds
+        waveLength: defaultWaveLength, // 10 seconds
+      },
+      // Level 2
       {
         spawnList: [
           {
@@ -33,8 +56,43 @@ export default class EnemySpawner {
             health: 100,
           },
         ],
-        spawnDelay: 1000, // 2 seconds
-        waveLength: 20 * 1000, // 20 seconds
+        spawnDelay: 2000, // 2 seconds
+        waveLength: defaultWaveLength, // 10 seconds
+      },
+      // Level 3
+      {
+        spawnList: [
+          {
+            EnemyClass: Enemy,
+            weight: 44,
+            id: "ghost",
+            speed: 60,
+            health: 100,
+          },
+          {
+            EnemyClass: Enemy,
+            weight: 66,
+            id: "advancedghost",
+            speed: 120,
+            health: 100,
+          },
+        ],
+        spawnDelay: 1500, // 1.5 seconds
+        waveLength: defaultWaveLength, // 10 seconds
+      },
+      // Level 4
+      {
+        spawnList: [
+          {
+            EnemyClass: Enemy,
+            weight: 100,
+            id: "advancedghost",
+            speed: 120,
+            health: 100,
+          },
+        ],
+        spawnDelay: 1000, // 1.5 seconds
+        waveLength: defaultWaveLength, // 10 seconds
       },
     ];
 
@@ -47,17 +105,19 @@ export default class EnemySpawner {
   }
 
   update(playerX, playerY) {
-    if (this.scene.time.now > this.waveEndTime) {
-      if (this.spawnLevel < this.spawnTables.length - 1) {
-        // Move to the next spawn level
-        this.spawnLevel++;
-        this.currentSpawnList = this.spawnTables[this.spawnLevel].spawnList;
-        this.currentSpawnDelay = this.spawnTables[this.spawnLevel].spawnDelay;
-        this.waveEndTime =
-          this.scene.time.now + this.spawnTables[this.spawnLevel].waveLength;
+    // If it is time for the next wave, and if there is a next wave in the spawn table, move to next wave
+    if (
+      this.scene.time.now > this.waveEndTime &&
+      this.spawnLevel < this.spawnTables.length - 1
+    ) {
+      // Move to the next spawn level
+      this.spawnLevel++;
+      this.currentSpawnList = this.spawnTables[this.spawnLevel].spawnList;
+      this.currentSpawnDelay = this.spawnTables[this.spawnLevel].spawnDelay;
+      this.waveEndTime =
+        this.scene.time.now + this.spawnTables[this.spawnLevel].waveLength;
 
-        console.log(`Spawn level increased to ${this.spawnLevel}`);
-      }
+      console.log(`Spawn level increased to ${this.spawnLevel}`);
     }
 
     // Spawning enemy once every spawnDelay milliseconds

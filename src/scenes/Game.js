@@ -47,7 +47,7 @@ export class Game extends Phaser.Scene {
       this.worldWidth / 2,
       this.worldHeight / 2,
       this.selectedCharacter,
-      120,
+      100,
       3
     );
 
