@@ -6,6 +6,7 @@ export default class Gun {
     this.bulletTexture = bulletTexture;
     this.fireRate = fireRate; // milliseconds between shots
     this.bulletSpeed = bulletSpeed;
+    this.bulletScale = 1;
 
     // Next time stamp the gun is allowed to fire
     this.nextFireTime = 0;

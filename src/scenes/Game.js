@@ -4,6 +4,8 @@ import Gun from "../gameobjects/Gun.js";
 import AnimationManager from "../utils/AnimationManager.js";
 import EnemySpawner from "../gameobjects/EnemySpawner.js";
 import { GameOver } from "./GameOver.js";
+import Bullet from "../gameobjects/Bullet.js";
+import ShootingEnemy from "../gameobjects/ShootingEnemy.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -102,6 +104,26 @@ export class Game extends Phaser.Scene {
         bullet.hitEnemy(enemy);
       }
     );
+
+    // Create a group for enemy bullets
+    this.enemyBullets = this.physics.add.group({
+      classType: Bullet || Phaser.Physics.Arcade.Sprite,
+      runChildUpdate: true,
+    });
+
+    // Add collision between enemy bullets and player
+    this.physics.add.collider(
+      this.enemyBullets,
+      this.player,
+      (player, bullet) => {
+        player.playerHit(bullet.x, bullet.y);
+        bullet.destroy();
+      }
+    );
+
+    // Test shooting enemy
+    // const shootingEnemy = new ShootingEnemy(this, 200, 200, "ghost", 60, 150);
+    // this.enemies.add(shootingEnemy);
 
     // Initializing animations
     AnimationManager.createAnimations(this);

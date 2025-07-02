@@ -1,4 +1,5 @@
 import Enemy from "../gameobjects/Enemy.js";
+import ShootingEnemy from "../gameobjects/ShootingEnemy.js";
 
 export default class EnemySpawner {
   constructor(scene, enemiesGroup) {
@@ -94,6 +95,34 @@ export default class EnemySpawner {
         spawnDelay: 1000, // 1.5 seconds
         waveLength: defaultWaveLength, // 10 seconds
       },
+      // Level 5 - New wave with shooting enemies
+      {
+        spawnList: [
+          {
+            EnemyClass: Enemy,
+            weight: 30,
+            id: "ghost",
+            speed: 60,
+            health: 100,
+          },
+          {
+            EnemyClass: Enemy,
+            weight: 40,
+            id: "advancedghost",
+            speed: 120,
+            health: 100,
+          },
+          {
+            EnemyClass: ShootingEnemy,
+            weight: 30,
+            id: "ghost",
+            speed: 40, // Slower than regular ghosts
+            health: 200, // More health than regular ghosts
+          },
+        ],
+        spawnDelay: 1000, // 1 second
+        waveLength: defaultWaveLength, // 10 seconds
+      },
     ];
 
     this.spawnLevel = 0; // Starting spawn level
@@ -164,7 +193,21 @@ export default class EnemySpawner {
   }
 
   spawnEnemy(x, y, id, speed, health) {
-    const enemy = this.enemiesGroup.get(x, y, id, speed, health);
+    // Get the current enemy entry to determine which class to use
+    const enemyEntry = this.currentSpawnList.find(
+      (entry) =>
+        entry.id === id && entry.speed === speed && entry.health === health
+    );
+
+    let enemy;
+    if (enemyEntry && enemyEntry.EnemyClass === ShootingEnemy) {
+      // Create shooting enemy directly since the group uses the base Enemy class
+      enemy = new ShootingEnemy(this.scene, x, y, id, speed, health);
+      this.enemiesGroup.add(enemy);
+    } else {
+      // Use the existing group method for regular enemies
+      enemy = this.enemiesGroup.get(x, y, id, speed, health);
+    }
 
     // If enemy was found or created, set its properties
     if (enemy) {
