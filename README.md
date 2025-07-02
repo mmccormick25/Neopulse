@@ -1,4 +1,4 @@
-Welcomd to Neopulse, a javascript top down shooter game.
+Welcome to Neopulse, a javascript top down shooter game.
 
 This project runs in the browser and can be tested with a local web server. I would recommend installing live-server with Node.js, or to use the Visual Studio Code IDE and install the Live Server extension. You can then launch the project in VSCode by right clicking index.html and selecting "Open with live server".
 
