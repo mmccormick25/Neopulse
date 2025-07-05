@@ -5,7 +5,7 @@ import AnimationManager from "../utils/AnimationManager.js";
 import EnemySpawner from "../gameobjects/EnemySpawner.js";
 import { GameOver } from "./GameOver.js";
 import Bullet from "../gameobjects/Bullet.js";
-import ShootingEnemy from "../gameobjects/ShootingEnemy.js";
+import PlasmaGun from "../gameobjects/PlasmaGun.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -24,8 +24,6 @@ export class Game extends Phaser.Scene {
 
     // Recording scene start time
     this.sceneStartTime = this.time.now;
-
-    console.log("Scene created at:", this.sceneStartTime);
 
     // Setting black background
     this.cameras.main.setBackgroundColor("#000000");
@@ -53,8 +51,6 @@ export class Game extends Phaser.Scene {
       3
     );
 
-    this.giveStartingBuffs();
-
     // Choosing cursor based on selected character
     this.chooseCursor(this.selectedCharacter);
 
@@ -71,6 +67,18 @@ export class Game extends Phaser.Scene {
 
     // Creating gun for player
     this.gun = new Gun(this, "defaultbullet");
+
+    // Creating map for scalability for future weapon upgrades
+    this.gunUpgradeMap = new Map([[20, new PlasmaGun(this, "plasmabullet")]]);
+    // Keys in map
+    this.killCountKeys = this.gunUpgradeMap.keys();
+    // Last key to signify no more upgrades
+    this.lastKey = this.killCountKeys[this.killCountKeys.length - 1];
+
+    this.killsNeededForUpgrade = this.killCountKeys.next().value;
+    this.enemiesKilled = 0;
+
+    this.giveStartingBuffs();
 
     /*
     //////////////////
@@ -97,8 +105,15 @@ export class Game extends Phaser.Scene {
       player.playerHit(enemy.x, enemy.y);
     });
 
+    // Create a group for player bullets
+    this.playerBullets = this.physics.add.group({
+      classType: Bullet || Phaser.Physics.Arcade.Sprite,
+      runChildUpdate: true,
+    });
+
+    // Add collission between player bullets and enemies
     this.physics.add.overlap(
-      this.gun.bullets,
+      this.playerBullets,
       this.enemies,
       (bullet, enemy) => {
         bullet.hitEnemy(enemy);
@@ -121,12 +136,67 @@ export class Game extends Phaser.Scene {
       }
     );
 
-    // Test shooting enemy
     // const shootingEnemy = new ShootingEnemy(this, 200, 200, "ghost", 60, 150);
-    // this.enemies.add(shootingEnemy);
+    // this.enemies.add(shootingEnemy)
 
     // Initializing animations
     AnimationManager.createAnimations(this);
+  }
+
+  onEnemyKilled() {
+    this.enemiesKilled++;
+
+    // Check if we should upgrade the gun
+    // killsNeededForUpgrade being -1 signifies that no more upgrades are available
+    if (
+      this.killsNeededForUpgrade !== -1 &&
+      this.enemiesKilled >= this.killsNeededForUpgrade
+    ) {
+      this.upgradeGun();
+    }
+  }
+
+  upgradeGun() {
+    // Get gun from map given killsNeeded goal
+    this.gun = this.gunUpgradeMap.get(this.killsNeededForUpgrade);
+
+    // Signify that this is last upgrade if last key is reached
+    if (this.killsNeededForUpgrade === this.lastKey) {
+      this.killsNeededForUpgrade = -1;
+    } else {
+      // Update kills needed for upgrade to next gun in map
+      this.killsNeededForUpgrade = this.killCountKeys.next().value;
+    }
+
+    // Show upgrade notification
+    this.showUpgradeNotification();
+  }
+
+  showUpgradeNotification() {
+    // Display upgrade notification in center of screen
+    const upgradeText = this.add
+      .text(
+        this.cameras.main.centerX,
+        this.cameras.main.centerY - 50,
+        "GUN UPGRADED!",
+        {
+          fontFamily: "Pixelify Sans",
+          fontSize: "64px",
+          color: "#42daf5",
+        }
+      )
+      .setOrigin(0.5)
+      .setScrollFactor(0)
+      .setDepth(1000);
+
+    // Fade out the notification after 3 seconds
+    this.tweens.add({
+      targets: upgradeText,
+      alpha: 0,
+      duration: 3000,
+      ease: "Power2",
+      onComplete: () => upgradeText.destroy(),
+    });
   }
 
   giveStartingBuffs() {
@@ -138,6 +208,9 @@ export class Game extends Phaser.Scene {
         break;
       case "triangleplayer":
         this.player.speed = Math.round(this.player.speed * 1.1); // Triangle player is faster
+      case "squareplayer":
+        this.gun.bulletScale += 0.15;
+        break;
     }
   }
 

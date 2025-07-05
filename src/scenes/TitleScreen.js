@@ -46,7 +46,7 @@ export class TitleScreen extends Phaser.Scene {
       612,
       650,
       1,
-      "+ 10%      ",
+      "+ 1S%      ",
       "bulletsizeicon"
     );
   }

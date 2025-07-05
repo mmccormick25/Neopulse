@@ -54,6 +54,7 @@ export class Preloader extends Phaser.Scene {
 
     // Gun assets
     this.load.image("defaultbullet", "defaultbullet.png");
+    this.load.image("plasmabullet", "plasmabullet.png");
 
     // Enemy assets
     this.load.image("errorsprite", "errorsprite.png");

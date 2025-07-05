@@ -30,14 +30,14 @@ export default class EnemySpawner {
         spawnList: [
           {
             EnemyClass: Enemy,
-            weight: 50,
+            weight: 60,
             id: "ghost",
             speed: 60,
             health: 100,
           },
           {
             EnemyClass: Enemy,
-            weight: 50,
+            weight: 40,
             id: "advancedghost",
             speed: 120,
             health: 100,
@@ -93,14 +93,14 @@ export default class EnemySpawner {
           },
         ],
         spawnDelay: 1000, // 1.5 seconds
-        waveLength: defaultWaveLength, // 10 seconds
+        waveLength: 15 * 1000, // 10 seconds
       },
       // Level 5 - New wave with shooting enemies
       {
         spawnList: [
           {
             EnemyClass: Enemy,
-            weight: 30,
+            weight: 20,
             id: "ghost",
             speed: 60,
             health: 100,
@@ -114,7 +114,7 @@ export default class EnemySpawner {
           },
           {
             EnemyClass: ShootingEnemy,
-            weight: 30,
+            weight: 40,
             id: "ghost",
             speed: 40, // Slower than regular ghosts
             health: 200, // More health than regular ghosts

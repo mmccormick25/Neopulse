@@ -12,7 +12,7 @@ export default class ShootingEnemy extends Enemy {
     this.shootCooldown = 0;
     this.shootDelay = 2000; // Shoot every 2 seconds
     this.shootRange = 350; // Only shoot if player is within this range
-    this.bulletSpeed = 200;
+    this.bulletSpeed = 160;
   }
 
   updateEnemy(playerX, playerY) {

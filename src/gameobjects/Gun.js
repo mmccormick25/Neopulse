@@ -1,5 +1,3 @@
-import Bullet from "./Bullet.js";
-
 export default class Gun {
   constructor(scene, bulletTexture, fireRate = 300, bulletSpeed = 2000) {
     this.scene = scene;
@@ -10,12 +8,6 @@ export default class Gun {
 
     // Next time stamp the gun is allowed to fire
     this.nextFireTime = 0;
-
-    // Create a group for bullets
-    this.bullets = scene.physics.add.group({
-      classType: Bullet || Phaser.Physics.Arcade.Sprite,
-      runChildUpdate: true,
-    });
   }
 
   fire(x, y, angle) {
@@ -31,8 +23,9 @@ export default class Gun {
     const dy = Math.sin(angle);
 
     // Create bullet
-    const bullet = this.bullets.get(x, y, this.bulletTexture, 34);
+    const bullet = this.scene.playerBullets.get(x, y, this.bulletTexture, 34);
     if (bullet) {
+      bullet.setScale(this.bulletScale);
       bullet.setActive(true).setVisible(true);
       bullet.body.reset(x, y);
       bullet.setVelocity(

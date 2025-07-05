@@ -20,7 +20,6 @@ export default class HealthBar {
       .setScrollFactor(0);
 
     for (let i = 0; i < health; i++) {
-      console.log("Drawing heart at index:", i);
       const heart = this.scene.add
         .image(64 + i * 54, 128, "heart")
         .setScale(1.5)

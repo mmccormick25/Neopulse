@@ -3,6 +3,11 @@ export class GameOver extends Phaser.Scene {
     super("GameOver");
   }
 
+  init(data) {
+    // Store score of game in this.gameScore
+    this.gameScore = data.score || 0; // Default to 0 if not provided
+  }
+
   create() {
     const screenHeight = this.scale.height;
     const screenWidth = this.scale.width;
@@ -12,7 +17,7 @@ export class GameOver extends Phaser.Scene {
       .text(
         screenWidth / 2,
         screenHeight / 2 - screenHeight / 20,
-        "Game Over",
+        `Score: ${this.gameScore}`,
         {
           fontFamily: "Pixelify Sans",
           fontSize: "96px",

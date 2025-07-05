@@ -71,6 +71,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     this.play(this.id + "_die", true);
 
+    // Update kill count in game scene
+    this.scene.onEnemyKilled();
+
     // Destroy only after the death animation is complete
     this.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => {
       this.destroy();
