@@ -10,7 +10,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
 
     this.setScale(0.75);
+
     this.speed = speed;
+    this.baseSpeed = this.speed;
+    this.speedUpgrade = 0;
+
     this.health = health;
     this.knockbackTimer = 0;
     this.invincibilityTimer = 0;
@@ -74,7 +78,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     // Setting knockback timer
     this.knockbackTimer = 100;
 
-    this.invincibilityTimer = 1000; // Set invincibility for 1 second
+    // Use custom invincibility duration if set, otherwise default to 1000ms
+    const invincibilityDuration = this.invincibilityDuration || 1000;
+    this.invincibilityTimer = invincibilityDuration;
   }
 
   movePlayer(cursors, keys) {

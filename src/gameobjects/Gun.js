@@ -2,9 +2,23 @@ export default class Gun {
   constructor(scene, bulletTexture, fireRate = 300, bulletSpeed = 2000) {
     this.scene = scene;
     this.bulletTexture = bulletTexture;
-    this.fireRate = fireRate; // milliseconds between shots
+
+    // Fire rate vars
+    this.fireRate = fireRate;
+    this.baseFireRate = this.fireRate;
+    this.fireRateUpgrade = 0;
+
+    // Bullet speed vars
     this.bulletSpeed = bulletSpeed;
+    this.baseBulletSpeed = this.bulletSpeed;
+    this.bulletSpeedUpgrade = 0;
+
     this.bulletScale = 1;
+
+    // Bullet damage vars
+    this.bulletDamage = 34;
+    this.baseBulletDamage = this.bulletDamage;
+    this.bulletDamageUpgrade = 0;
 
     // Next time stamp the gun is allowed to fire
     this.nextFireTime = 0;
@@ -22,8 +36,13 @@ export default class Gun {
     const dx = Math.cos(angle);
     const dy = Math.sin(angle);
 
-    // Create bullet
-    const bullet = this.scene.playerBullets.get(x, y, this.bulletTexture, 34);
+    // Create bullet with current damage value
+    const bullet = this.scene.playerBullets.get(
+      x,
+      y,
+      this.bulletTexture,
+      this.bulletDamage
+    );
     if (bullet) {
       bullet.setScale(this.bulletScale);
       bullet.setActive(true).setVisible(true);

@@ -34,6 +34,8 @@ export default class PlasmaGun extends Gun {
       // Resetting to player body
       bullet.body.reset(x, y);
 
+      bullet.setScale(this.bulletScale);
+
       const velocityX = Math.round(dx * this.bulletSpeed);
       const velocityY = Math.round(dy * this.bulletSpeed);
 

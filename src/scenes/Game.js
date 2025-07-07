@@ -6,6 +6,8 @@ import EnemySpawner from "../gameobjects/EnemySpawner.js";
 import { GameOver } from "./GameOver.js";
 import Bullet from "../gameobjects/Bullet.js";
 import PlasmaGun from "../gameobjects/PlasmaGun.js";
+import ExperienceBar from "../gameobjects/ExperienceBar.js";
+import LevelUpGUI from "./LevelUp.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -51,6 +53,12 @@ export class Game extends Phaser.Scene {
       3
     );
 
+    // Initialize level system
+    this.playerLevel = 1;
+    this.currentExp = 0;
+    this.expToNextLevel = 5; // Start with 5 enemies needed for level 2
+    this.experienceBar = new ExperienceBar(this);
+
     // Choosing cursor based on selected character
     this.chooseCursor(this.selectedCharacter);
 
@@ -67,6 +75,7 @@ export class Game extends Phaser.Scene {
 
     // Creating gun for player
     this.gun = new Gun(this, "defaultbullet");
+    this.gun.bulletDamage = 34; // Initialize bullet damage property
 
     // Creating map for scalability for future weapon upgrades
     this.gunUpgradeMap = new Map([[20, new PlasmaGun(this, "plasmabullet")]]);
@@ -146,6 +155,15 @@ export class Game extends Phaser.Scene {
   onEnemyKilled() {
     this.enemiesKilled++;
 
+    // Add experience
+    this.currentExp++;
+    this.experienceBar.drawBar(this.currentExp, this.expToNextLevel);
+
+    // Check for level up
+    if (this.currentExp >= this.expToNextLevel) {
+      this.levelUp();
+    }
+
     // Check if we should upgrade the gun
     // killsNeededForUpgrade being -1 signifies that no more upgrades are available
     if (
@@ -154,6 +172,27 @@ export class Game extends Phaser.Scene {
     ) {
       this.upgradeGun();
     }
+  }
+
+  levelUp() {
+    // Increasing player level
+    this.playerLevel++;
+    // Resetting xp to 0
+    this.currentExp = 0;
+
+    // Increase experience requirement (exponential growth)
+    this.expToNextLevel = Math.floor(5 * Math.pow(1.5, this.playerLevel - 1));
+
+    // Update UI
+    this.experienceBar.updateLevel(this.playerLevel);
+    this.experienceBar.drawBar(this.currentExp, this.expToNextLevel);
+
+    // Pausing this scene for level up
+    this.scene.pause();
+    // Launching level up scene
+    this.scene.launch("LevelUp", {
+      gameScene: this, // so LevelUpScene can access player, gun, etc.
+    });
   }
 
   upgradeGun() {
@@ -208,6 +247,7 @@ export class Game extends Phaser.Scene {
         break;
       case "triangleplayer":
         this.player.speed = Math.round(this.player.speed * 1.1); // Triangle player is faster
+        this.player.baseSpeed = this.player.speed;
       case "squareplayer":
         this.gun.bulletScale += 0.15;
         break;
