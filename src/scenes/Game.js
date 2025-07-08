@@ -8,6 +8,7 @@ import Bullet from "../gameobjects/Bullet.js";
 import PlasmaGun from "../gameobjects/PlasmaGun.js";
 import ExperienceBar from "../gameobjects/ExperienceBar.js";
 import LevelUpGUI from "./LevelUp.js";
+import Score from "../gameobjects/Score.js";
 
 export class Game extends Phaser.Scene {
   constructor() {
@@ -58,6 +59,8 @@ export class Game extends Phaser.Scene {
     this.currentExp = 0;
     this.expToNextLevel = 5; // Start with 5 enemies needed for level 2
     this.experienceBar = new ExperienceBar(this);
+
+    this.score = new Score(this);
 
     // Choosing cursor based on selected character
     this.chooseCursor(this.selectedCharacter);
@@ -293,7 +296,9 @@ export class Game extends Phaser.Scene {
     // Pausing game scene
     this.scene.pause();
     // Launching game over
-    this.scene.launch("GameOver");
+    this.scene.launch("GameOver", {
+      score: this.score.gameScore,
+    });
   }
 
   update() {
@@ -318,5 +323,7 @@ export class Game extends Phaser.Scene {
     });
 
     this.enemySpawner.update(this.player.x, this.player.y); // Update enemy spawner
+
+    this.score.updateScore();
   }
 }
